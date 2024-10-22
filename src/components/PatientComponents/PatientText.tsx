@@ -193,6 +193,13 @@ const PatientText: React.FC<PatientTextProps> = ({ text, verified, lgtm, onUpdat
     }
   };
 
+  const capitalizeFieldName = (key: string) => {
+    return key
+      .split('_')
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+      .join(' ');
+  };
+
   const renderField = (key: string, value: any) => {
     if (['current_symptoms', 'current_medications', 'patient_risk_factors'].includes(key)) {
       const items = value ? value.split(',').map((item: string) => item.trim()).filter((item: string) => item !== '') : [];
@@ -264,7 +271,7 @@ const PatientText: React.FC<PatientTextProps> = ({ text, verified, lgtm, onUpdat
                 >
                   <div className="flex items-center space-x-2 mb-2">
                     {getIcon(key)}
-                    <h3 className="text-lg font-semibold">{key.replace(/_/g, ' ')}</h3>
+                    <h3 className="text-lg font-semibold">{capitalizeFieldName(key)}</h3>
                   </div>
                   {isEditing && (
                     <Button 
