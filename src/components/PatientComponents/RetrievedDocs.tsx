@@ -5,6 +5,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { ScrollArea } from "@/components/ui/scroll-area";
 import StatusIndicator from './StatusIndicator'; // Ensure this component is created
 import { FileText } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface RetrievedDoc {
   item: {
@@ -47,7 +48,23 @@ const RetrievedDocs: React.FC<RetrievedDocsProps> = ({ docs, verified, lgtm, onU
   };
 
   return (
-    <Card className="mb-4">
+    <Card 
+    className={cn(
+      "mb-4 transition-all duration-200",
+      // Background gradient based on verification status
+      !verified 
+        ? "" // No background for unverified
+        : lgtm 
+          ? "bg-gradient-to-r from-green-50/50 via-green-50/30 to-transparent" 
+          : "bg-gradient-to-r from-red-50/50 via-red-50/30 to-transparent",
+      // Border color based on verification status    
+      !verified 
+        ? "" // No border color for unverified
+        : lgtm 
+          ? "border-l-4 border-l-green-500 border-y-0 border-r-0"
+          : "border-l-4 border-l-red-500 border-y-0 border-r-0"
+    )}
+  >
       <CardHeader className="flex flex-row items-center justify-between py-2">
         <CardTitle className="text-xl font-semibold">Retrieved Docs</CardTitle>
           <div className="flex items-center space-x-2 flex-grow mr-2 ml-2"> {/* Added flex-grow here */}

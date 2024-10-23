@@ -1,6 +1,8 @@
 import React from 'react';
 import { HelpCircle, ThumbsUp, ThumbsDown, RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 interface StatusIndicatorProps {
@@ -13,31 +15,25 @@ interface StatusIndicatorProps {
 const StatusIndicator: React.FC<StatusIndicatorProps> = ({ verified, lgtm, onUpdate, onReset }) => {
   return (
     <div className="flex items-center justify-between w-full">
-      <div className="flex-shrink-0">
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger>
-              <HelpCircle
-                size={16}
-                className={`${
-                  !verified ? "text-blue-500" : lgtm ? "text-green-500" : "text-red-500"
-                }`}
-              />
-            </TooltipTrigger>
-            <TooltipContent
-              className={`px-3 py-1.5 text-xs text-white rounded-md ${
-                !verified ? 'bg-blue-500' : lgtm ? 'bg-green-500' : 'bg-red-500'
-              }`}
-            >
-              {!verified 
-                ? "Unverified"
-                : lgtm 
-                  ? "Looks Good" 
-                  : "Doesn't Look Good"
-              }
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
+      <div className="flex-shrink-0 mb-2">
+      <Badge 
+      variant="outline" 
+      className={cn(
+        "font-medium",
+        !verified 
+          ? "text-blue-500 border-blue-500" 
+          : lgtm 
+            ? "text-green-500 border-green-500" 
+            : "text-red-500 border-red-500"
+      )}
+    >
+      {!verified 
+        ? "Unverified" 
+        : lgtm 
+          ? "Verified-Looks Good" 
+          : "Verified-Not Good"
+      }
+    </Badge>
       </div>
       <div className="flex space-x-4">
         {(!verified || (verified && !lgtm)) && (

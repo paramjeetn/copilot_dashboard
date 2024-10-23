@@ -5,6 +5,7 @@ import StatusIndicator from '@/components/GuidelineComponents/StatusIndicator';
 import { Button } from "@/components/ui/button";
 import { Pencil, X, Check, Plus, Minus } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import { cn } from "@/lib/utils";
 
 interface MedicalConditionProps {
   condition: string;
@@ -79,7 +80,21 @@ const MedicalCondition: React.FC<MedicalConditionProps> = ({
   // };
 
   return (
-    <Card className="mb-4">
+    <Card 
+    className={cn(
+      "mb-4 transition-all duration-200",
+      !verified 
+        ? "" 
+        : lgtm 
+          ? "bg-gradient-to-r from-green-50/50 via-green-50/30 to-transparent" 
+          : "bg-gradient-to-r from-red-50/50 via-red-50/30 to-transparent",
+      !verified 
+        ? "" 
+        : lgtm 
+          ? "border-l-4 border-l-green-500 border-y-0 border-r-0"
+          : "border-l-4 border-l-red-500 border-y-0 border-r-0"
+    )}
+  >
       <CardHeader className="flex flex-row items-center justify-between py-2">
         <CardTitle className="text-xl font-semibold">Medical Condition</CardTitle>
         <div className="flex items-center space-x-2 flex-grow mr-2 ml-2">
@@ -101,17 +116,14 @@ const MedicalCondition: React.FC<MedicalConditionProps> = ({
           <div className="flex flex-wrap gap-2 mt-2">
             {editedConditions.map((condition, index) => (
               <div key={index} className="relative group inline-flex">
-                  <Button
-                    variant="secondary"
-                    className="rounded-full m-1 bg-gray-100 text-gray-800 hover:bg-gray-200 font-bold flex items-center h-auto py-1 px-3 max-w-xs break-all" // Change break-words to break-all
-                    >
+                  <div className="rounded-full m-1 bg-gray-200 text-gray-800 flex items-center h-auto py-0.5 px-2.5 text-[.9rem] font-bold max-w-xs break-all">
                     {condition}
-                  </Button>                
+                  </div>
                 {isEditing && (
                   <Button
                     variant="ghost"
                     size="sm"
-                    className="absolute -top-1 -right-1 rounded-full p-0 w-4 h-4 bg-red-100 hover:bg-red-500 text-red-500 hover:text-white flex items-center justify-center border border-red-200 hover:border-red-500 transition-colors duration-200"
+                    className="absolute -top-1 -right-1 rounded-full p-0 w-4 h-4 bg-red-100 text-red-500 flex items-center justify-center border border-red-200"
                     onClick={() => handleRemoveCondition(index)}
                   >
                     <Minus size={10} />
@@ -137,7 +149,7 @@ const MedicalCondition: React.FC<MedicalConditionProps> = ({
                 variant="default" 
                 size="sm" 
                 onClick={handleAddCondition}
-                className="bg-black text-white hover:bg-gray-800"
+                className="bg-black text-white"
               >
                 <Plus size={16} className="mr-2" /> Add
               </Button>
