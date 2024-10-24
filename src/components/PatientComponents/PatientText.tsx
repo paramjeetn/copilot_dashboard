@@ -238,7 +238,7 @@ const PatientText: React.FC<PatientTextProps> = ({ text, verified, lgtm, onUpdat
           : "border-l-4 border-l-red-500 border-y-0 border-r-0"
     )}>
       <CardHeader className="flex flex-row items-center justify-between py-2">
-        <CardTitle className="text-2xl font-semibold">Patient Details</CardTitle>
+        <CardTitle className="text-xl font-semibold">Patient Details</CardTitle>
         <div className="flex items-center space-x-2 flex-grow mr-2 ml-2">
           <StatusIndicator
             verified={verified}

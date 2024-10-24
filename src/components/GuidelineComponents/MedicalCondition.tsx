@@ -123,7 +123,7 @@ const MedicalCondition: React.FC<MedicalConditionProps> = ({
                   <Button
                     variant="ghost"
                     size="sm"
-                    className="absolute -top-1 -right-1 rounded-full p-0 w-4 h-4 bg-red-100 text-red-500 flex items-center justify-center border border-red-200"
+                    className="absolute -top-1 -right-1 rounded-full p-0 w-4 h-4 hover:bg-red-500 text-red-500 bg-red-100 hover:text-white flex items-center justify-center border border-red-200 hover:border-red-500 transition-colors duration-200"
                     onClick={() => handleRemoveCondition(index)}
                   >
                     <Minus size={10} />
