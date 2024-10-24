@@ -40,14 +40,14 @@ const PatientText: React.FC<PatientTextProps> = ({ text, verified, lgtm, onUpdat
   );
 
   const MaleIcon = () => (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" className="w-8 h-8">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" className="w-10 h-10">
       <circle cx="12" cy="12" r="4" strokeWidth="1.5"/>
       <path d="M15.5 8.5l4-4M19.5 8.5v-4h-4" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
     </svg>
   );
 
   const FemaleIcon = () => (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" className="w-8 h-8">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" className="w-10 h-10">
       <circle cx="12" cy="10" r="4" strokeWidth="1.5"/>
       <path d="M12 14v7M9 18h6" strokeWidth="1.5" strokeLinecap="round"/>
     </svg>
@@ -238,7 +238,7 @@ const PatientText: React.FC<PatientTextProps> = ({ text, verified, lgtm, onUpdat
           : "border-l-4 border-l-red-500 border-y-0 border-r-0"
     )}>
       <CardHeader className="flex flex-row items-center justify-between py-2">
-        <CardTitle className="text-xl font-semibold">Patient Details</CardTitle>
+        <CardTitle className="text-2xl font-semibold">Patient Details</CardTitle>
         <div className="flex items-center space-x-2 flex-grow mr-2 ml-2">
           <StatusIndicator
             verified={verified}
@@ -263,7 +263,9 @@ const PatientText: React.FC<PatientTextProps> = ({ text, verified, lgtm, onUpdat
         <div className="absolute inset-0 bg-gradient-to-r from-blue-50/80 to-transparent dark:from-blue-950/20"/>
         <div className="relative flex items-center p-4 space-x-4">
           <div className="text-blue-500 dark:text-blue-400">
-            <ProfileIcon />
+            <div className={editedData.gender === 'Male' ? 'text-blue-500 dark:text-blue-400' : 'text-purple-500 dark:text-purple-400'}>
+            {editedData.gender === 'Male' ? <MaleIcon /> : <FemaleIcon />}
+          </div>
           </div>
           <div>
             <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">
@@ -280,9 +282,7 @@ const PatientText: React.FC<PatientTextProps> = ({ text, verified, lgtm, onUpdat
       <div className="relative bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-r from-purple-50/80 to-transparent dark:from-purple-950/20"/>
         <div className="relative flex items-center p-4 space-x-4">
-          <div className={editedData.gender === 'Male' ? 'text-blue-500 dark:text-blue-400' : 'text-purple-500 dark:text-purple-400'}>
-            {editedData.gender === 'Male' ? <MaleIcon /> : <FemaleIcon />}
-          </div>
+        {/* <ProfileIcon /> */}<Calendar className="text-green-500" size={30} />
           <div>
           <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">
               Age

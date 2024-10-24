@@ -19,7 +19,7 @@ const StatusIndicator: React.FC<StatusIndicatorProps> = ({ verified, lgtm, onUpd
       <Badge 
       variant="outline" 
       className={cn(
-        "font-medium",
+        "font-medium mr-2 w-[7rem] text-center flex justify-center items-center gap-2 rounded-full",
         !verified 
           ? "text-blue-500 border-blue-500" 
           : lgtm 
@@ -30,52 +30,92 @@ const StatusIndicator: React.FC<StatusIndicatorProps> = ({ verified, lgtm, onUpd
       {!verified 
         ? "Unverified" 
         : lgtm 
-          ? "Verified-Looks Good" 
-          : "Verified-Not Good"
+          ? "Verified-LGTM" 
+          : "Verified-DLGTM"
       }
     </Badge>
       </div>
-      <div className="flex space-x-4">
-        {(!verified || (verified && !lgtm)) && (
+      <div className="flex space-x-1">
+      <TooltipProvider>
+        {/* Thumbs Up */}
+        {(!verified || (verified && !lgtm)) ? (
+          <Tooltip>
+            <TooltipTrigger>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => onUpdate(true, true)}
+                className="rounded-full p-2 hover:bg-gray-200 active:bg-gray-300"
+              >
+                <ThumbsUp size={16} className="text-green-500" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>Mark as Verified-LGTM</TooltipContent>
+          </Tooltip>
+        ) : (
           <Button
             variant="ghost"
             size="sm"
-            onClick={() => onUpdate(true, true)}
-            className="p-0"
+            disabled
+            className="rounded-full p-2 cursor-not-allowed"
           >
-            <ThumbsUp size={16} className="text-green-500" />
+            <ThumbsUp size={16} className="text-gray-400" />
           </Button>
         )}
-        {(!verified || (verified && lgtm)) && (
+
+        {/* Thumbs Down */}
+        {(!verified || (verified && lgtm)) ? (
+          <Tooltip>
+            <TooltipTrigger>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => onUpdate(true, false)}
+                className="rounded-full p-2 hover:bg-gray-200 active:bg-gray-300"
+              >
+                <ThumbsDown size={16} className="text-red-500" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>Mark as Verified-DLGTM</TooltipContent>
+          </Tooltip>
+        ) : (
           <Button
             variant="ghost"
             size="sm"
-            onClick={() => onUpdate(true, false)}
-            className="p-0"
+            disabled
+            className="rounded-full p-2 cursor-not-allowed"
           >
-            <ThumbsDown size={16} className="text-red-500" />
+            <ThumbsDown size={16} className="text-gray-400" />
           </Button>
         )}
-        {verified && (
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={onReset}
-                  className="p-0"
-                >
-                  <RotateCcw size={16} className="text-blue-500" />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>
-                Reset verification
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
+
+        {/* Reset */}
+        {verified ? (
+          <Tooltip>
+            <TooltipTrigger>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={onReset}
+                className="rounded-full p-2 hover:bg-gray-200 active:bg-gray-300"
+              >
+                <RotateCcw size={16} className="text-blue-500" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>Reset verification</TooltipContent>
+          </Tooltip>
+        ) : (
+          <Button
+            variant="ghost"
+            size="sm"
+            disabled
+            className="rounded-full p-2 cursor-not-allowed"
+          >
+            <RotateCcw size={16} className="text-gray-400" />
+          </Button>
         )}
-      </div>
+      </TooltipProvider>
+    </div>
     </div>
   );
 };
