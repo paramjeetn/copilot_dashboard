@@ -34,6 +34,7 @@ export interface PatientData {
       guideline_medical_condition: string;
       guideline_criteria: string;
       guideline_pdf: string;
+      guideline_comments: string;
       guideline_text_verified: boolean;
       guideline_medical_condition_verified: boolean;
       guideline_criteria_verified: boolean;

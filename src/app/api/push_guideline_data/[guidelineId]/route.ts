@@ -14,6 +14,7 @@ interface GuidelineData {
   guideline_medical_condition: string;
   guideline_criteria: string;
   guideline_pdf: string;
+  guideline_comments: string;
   guideline_text_verified: boolean;
   guideline_medical_condition_verified: boolean;
   guideline_criteria_verified: boolean;
@@ -30,6 +31,7 @@ export async function POST(request: Request, context: RouteContext) {
   try {
     // Parse the incoming request body
     const requestBody: GuidelineData = await request.json();
+    console.log("final send",JSON.stringify(requestBody));
     
     // Construct the URL with the guideline ID
     const url = `https://paramjeetpradhan00-copilot.cloud.dbos.dev/api/v1/push_guideline_data/${guidelineId}`;
@@ -48,7 +50,10 @@ export async function POST(request: Request, context: RouteContext) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
 
-    const data = await response.json();
+    
+
+    const data = await response.json()//;{ message: 'Guideline data inserted successfully' };
+    //console.log(data);
     return NextResponse.json(data);
 
   } catch (error) {

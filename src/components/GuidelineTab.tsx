@@ -4,10 +4,11 @@ import GuidelineText from '@/components/GuidelineComponents/GuidelineText';
 import MedicalCondition from '@/components/GuidelineComponents/MedicalCondition';
 import GuidelineCriteria from '@/components/GuidelineComponents/GuidelineCriteria';
 import GuidelinePDF from '@/components/GuidelineComponents/GuidelinePDF';
-import {GuidelineData, GuidelineTabProps, Notification} from '@/components/types'
+import GuidelineComments from '@/components/GuidelineComponents/GuidelineComments';
+import { GuidelineData, GuidelineTabProps, Notification } from '@/components/types';
 import GuidelineDataLoading from '@/components/LoadingPages/GuidelineLoading';
 
-// Import or define the useDebounce hook here
+// Debounce hook implementation
 const useDebounce = <T extends (...args: any[]) => void>(callback: T, delay: number) => {
   const [timer, setTimer] = useState<NodeJS.Timeout | null>(null);
 
@@ -39,6 +40,27 @@ const GuidelineTab: React.FC<GuidelineTabProps> = ({ selectedItem }) => {
   const [_isSaving, setIsSaving] = useState(false);
   const [notification, setNotification] = useState<Notification | null>(null);
 
+  // Function to parse stringified comments
+  const parseComments = (commentsString: string | null): Record<string, string> => {
+    if (!commentsString) return {};
+    try {
+      return JSON.parse(commentsString);
+    } catch (error) {
+      console.error('Error parsing comments:', error);
+      return {};
+    }
+  };
+
+  // Function to stringify comments
+  const stringifyComments = (comments: Record<string, string>): string => {
+    try {
+      return JSON.stringify(comments);
+    } catch (error) {
+      console.error('Error stringifying comments:', error);
+      return '{}';
+    }
+  };
+
   useEffect(() => {
     if (selectedItem) {
       fetchGuidelineData(selectedItem);
@@ -49,7 +71,7 @@ const GuidelineTab: React.FC<GuidelineTabProps> = ({ selectedItem }) => {
     if (notification) {
       const timer = setTimeout(() => {
         setNotification(null);
-      }, 1000); // Hide notification after 3 seconds
+      }, 1000);
 
       return () => clearTimeout(timer);
     }
@@ -91,6 +113,7 @@ const GuidelineTab: React.FC<GuidelineTabProps> = ({ selectedItem }) => {
           guideline_medical_condition: updatedData.guideline_data.guideline_medical_condition,
           guideline_criteria: updatedData.guideline_data.guideline_criteria,
           guideline_pdf: updatedData.guideline_data.guideline_pdf,
+          guideline_comments: updatedData.guideline_data.guideline_comments,
           guideline_text_verified: Number(updatedData.guideline_data.guideline_text_verified),
           guideline_medical_condition_verified: Number(updatedData.guideline_data.guideline_medical_condition_verified),
           guideline_criteria_verified: Number(updatedData.guideline_data.guideline_criteria_verified),
@@ -113,7 +136,6 @@ const GuidelineTab: React.FC<GuidelineTabProps> = ({ selectedItem }) => {
       setIsSaving(false);
     }
   };
-
 
   const debouncedSaveGuidelineData = useDebounce(saveGuidelineData, 1000);
 
@@ -147,7 +169,6 @@ const GuidelineTab: React.FC<GuidelineTabProps> = ({ selectedItem }) => {
     }
   };
 
-
   const handleTextChange = (field: string) => (newText: string) => {
     if (guidelineData) {
       const updatedData = {
@@ -158,7 +179,32 @@ const GuidelineTab: React.FC<GuidelineTabProps> = ({ selectedItem }) => {
         },
       };
       setGuidelineData(updatedData);
-      saveGuidelineData(updatedData); // Use immediate save for text changes
+      saveGuidelineData(updatedData);
+    }
+  };
+
+  const handleSaveComment = (newComment: Record<string, string>) => {
+    if (guidelineData) {
+      // Parse existing comments
+      const currentComments = parseComments(guidelineData.guideline_data.guideline_comments);
+      
+      // Merge with new comment
+      const updatedComments = {
+        ...currentComments,
+        ...newComment
+      };
+
+      // Create updated data with stringified comments
+      const updatedData = {
+        ...guidelineData,
+        guideline_data: {
+          ...guidelineData.guideline_data,
+          guideline_comments: stringifyComments(updatedComments)
+        }
+      };
+
+      setGuidelineData(updatedData);
+      saveGuidelineData(updatedData);
     }
   };
 
@@ -181,13 +227,14 @@ const GuidelineTab: React.FC<GuidelineTabProps> = ({ selectedItem }) => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <section className="space-y-4">
           <GuidelineText
+            pdfUrl={guidelineData.guideline_data.guideline_pdf}
+            name={guidelineData.guideline_name}
             text={guidelineData.guideline_data.guideline_text}
             verified={guidelineData.guideline_data.guideline_text_verified}
             lgtm={guidelineData.guideline_data.guideline_text_lgtm}
             onUpdate={handleUpdate('guideline_text')}
             onReset={handleReset('guideline_text')}
             onTextChange={handleTextChange('guideline_text')}
-
           />
         </section>
         <section className="space-y-4">
@@ -198,7 +245,6 @@ const GuidelineTab: React.FC<GuidelineTabProps> = ({ selectedItem }) => {
             onUpdate={handleUpdate('guideline_medical_condition')}
             onReset={handleReset('guideline_medical_condition')}
             onTextChange={handleTextChange('guideline_medical_condition')}
-
           />
           <GuidelineCriteria
             criteria={guidelineData.guideline_data.guideline_criteria}
@@ -207,9 +253,15 @@ const GuidelineTab: React.FC<GuidelineTabProps> = ({ selectedItem }) => {
             onUpdate={handleUpdate('guideline_criteria')}
             onReset={handleReset('guideline_criteria')}
             onTextChange={handleTextChange('guideline_criteria')}
-
           />
-          <GuidelinePDF pdfUrl={guidelineData.guideline_data.guideline_pdf} />
+          <GuidelinePDF 
+            pdfUrl={guidelineData.guideline_data.guideline_pdf} 
+          />
+          <GuidelineComments
+            comments={parseComments(guidelineData.guideline_data.guideline_comments)}
+            userEmail={auth.currentUser?.email || 'anonymous'}
+            onSaveComment={handleSaveComment}
+          />
         </section>
       </div>
     </div>

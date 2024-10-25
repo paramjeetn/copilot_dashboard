@@ -125,7 +125,7 @@ const Dashboard = () => {
                     <ul>
                       {filteredData().map(([key, value]) => (
                         <li key={key} onClick={() => handleSelect(value, key)} className="py-2 px-4 hover:bg-gray-100 cursor-pointer">
-                          {value} {activeTab === 'patients' && `(${key})`}
+                          {value} {activeTab === 'patients' && `(${key.slice(-5)})`}
                         </li>
                       ))}
                     </ul>

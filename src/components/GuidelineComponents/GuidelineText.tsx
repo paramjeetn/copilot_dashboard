@@ -80,11 +80,13 @@ import React, { useState, useEffect } from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import StatusIndicator from './StatusIndicator';
 import { Button } from "@/components/ui/button";
-import { Pencil, X, Check } from "lucide-react";
+import { Pencil, X, Check, ExternalLink } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 
 interface GuidelineTextProps {
+  name: string;
+  pdfUrl: string;
   text: string;
   verified: boolean;
   lgtm: boolean;
@@ -93,13 +95,19 @@ interface GuidelineTextProps {
   onTextChange: (newText: string) => void;
 }
 
-const GuidelineText: React.FC<GuidelineTextProps> = ({ text, verified, lgtm, onUpdate, onReset, onTextChange }) => {
+const GuidelineText: React.FC<GuidelineTextProps> = ({ pdfUrl, name, text, verified, lgtm, onUpdate, onReset, onTextChange }) => {
+  console.log("guideline",text)
   const [isEditing, setIsEditing] = useState(false);
   const [editedText, setEditedText] = useState(text);
 
   useEffect(() => {
     setEditedText(text);
   }, [text]);
+
+  const handleLinkClick = () => {
+    // const url = pdfUrl; // Replace with your actual URL
+    window.open(pdfUrl, '_blank');
+  };
 
   const handleEdit = () => {
     setIsEditing(true);
@@ -143,22 +151,34 @@ const GuidelineText: React.FC<GuidelineTextProps> = ({ text, verified, lgtm, onU
           : "border-l-4 border-l-red-500 border-y-0 border-r-0"
     )}
   >
-      <CardHeader className="flex flex-row items-center justify-between py-2">
-        <CardTitle className="text-xl font-semibold">Guideline Text</CardTitle>
-        <div className="flex items-center space-x-2 flex-grow mr-2 ml-2">
-          <StatusIndicator
-            verified={verified}
-            lgtm={lgtm}
-            onUpdate={onUpdate}
-            onReset={onReset}
-          />
-          {!isEditing && (
-            <Button variant="ghost" size="sm" onClick={handleEdit}>
-              <Pencil size={16} />
-            </Button>
-          )}
-        </div>
-      </CardHeader>
+          <CardHeader className="flex flex-row items-center py-2">
+      <div className="min-w-0 mr-2 max-w-[14rem] flex items-center">
+      <CardTitle className="text-xl font-semibold">
+        <span>
+            {name?.replace(/_/g, ' ')} 
+        </span>
+        <ExternalLink 
+            size={16} 
+            className="text-blue-500 cursor-pointer hover:text-blue-600" 
+            style={{ display: 'inline-block', marginLeft: '.7rem', marginBottom: '.25rem' }} // Adjust margin as needed
+            onClick={handleLinkClick}
+        />
+       </CardTitle>
+        
+      </div>
+      <StatusIndicator
+        verified={verified}
+        lgtm={lgtm}
+        onUpdate={onUpdate}
+        onReset={onReset}
+      />
+      <div className="flex-1" />
+      {!isEditing && (
+        <Button variant="ghost" size="sm" onClick={handleEdit}>
+          <Pencil size={16} />
+        </Button>
+      )}
+    </CardHeader>
       <CardContent>
         {isEditing ? (
           <>
