@@ -139,6 +139,27 @@ const GuidelineTab: React.FC<GuidelineTabProps> = ({ selectedItem }) => {
 
   const debouncedSaveGuidelineData = useDebounce(saveGuidelineData, 1000);
 
+  const handleDeleteComment = (email: string) => {
+    if (guidelineData) {
+      const currentComments = parseComments(guidelineData.guideline_data.guideline_comments);
+      
+      // Remove the comment for this email
+      delete currentComments[email];
+      
+      // Update the data with the comment removed
+      const updatedData = {
+        ...guidelineData,
+        guideline_data: {
+          ...guidelineData.guideline_data,
+          guideline_comments: stringifyComments(currentComments)
+        }
+      };
+  
+      setGuidelineData(updatedData);
+      saveGuidelineData(updatedData);
+    }
+  };
+
   const handleUpdate = (field: string) => (newVerified: boolean, newLgtm: boolean) => {
     if (guidelineData) {
       const updatedData = {
@@ -261,6 +282,7 @@ const GuidelineTab: React.FC<GuidelineTabProps> = ({ selectedItem }) => {
             comments={parseComments(guidelineData.guideline_data.guideline_comments)}
             userEmail={auth.currentUser?.email || 'anonymous'}
             onSaveComment={handleSaveComment}
+            onDeleteComment={handleDeleteComment}  // Add this line
           />
         </section>
       </div>
